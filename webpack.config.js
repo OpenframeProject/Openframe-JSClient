@@ -2,8 +2,8 @@ module.exports = {
   entry: "./src/api",
   output: {
     path: __dirname,
-    filename: "index.js",
-    library: 'api.js',
+    filename: "dist/of.js",
+    library: 'OF',
     libraryTarget: 'commonjs2'
   },
   module: {
@@ -14,6 +14,9 @@ module.exports = {
       query: {
         presets: ['es2015']
       }
+    }, {
+      test: /\.json$/,
+      loader: 'json'
     }]
   },
   externals: [

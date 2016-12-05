@@ -47,7 +47,13 @@ module.exports =
 
 	'use strict';
 
-	var _users2 = __webpack_require__(1);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _auth = __webpack_require__(1);
+
+	var _auth2 = _interopRequireDefault(_auth);
+
+	var _users2 = __webpack_require__(2);
 
 	var _users3 = _interopRequireDefault(_users2);
 
@@ -75,36 +81,89 @@ module.exports =
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var API = function API() {
-	  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	// Package version
+	var VERSION = __webpack_require__(9).version;
 
-	  _classCallCheck(this, API);
-
-	  this.config = config;
-
-	  this.fetchJSON = (0, _fetchJSON3.default)(config);
-
-	  this.users = (0, _users3.default)(this.fetchJSON, this.config);
-	  this.frames = (0, _frames3.default)(this.fetchJSON, this.config);
-	  this.artwork = (0, _artwork3.default)(this.fetchJSON, this.config);
-	  this.collections = (0, _collections3.default)(this.fetchJSON, this.config);
-	  this.channels = (0, _channels3.default)(this.fetchJSON, this.config);
+	var DEFAULT_OPTIONS = {
+	  api_base: 'https://api.openframe.io/api/'
 	};
 
-	module.exports = API;
+	var OF = function () {
+	  function OF() {
+	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	    _classCallCheck(this, OF);
+
+	    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
+
+	    this.VERSION = VERSION;
+
+	    this.fetchJSON = (0, _fetchJSON3.default)(this.options);
+
+	    this.users = (0, _users3.default)(this.fetchJSON, this.options);
+	    this.frames = (0, _frames3.default)(this.fetchJSON, this.options);
+	    this.artwork = (0, _artwork3.default)(this.fetchJSON, this.options);
+	    this.collections = (0, _collections3.default)(this.fetchJSON, this.options);
+	    this.channels = (0, _channels3.default)(this.fetchJSON, this.options);
+	  }
+
+	  _createClass(OF, [{
+	    key: 'accessToken',
+	    value: function accessToken() {
+	      return _auth2.default.getToken();
+	    }
+	  }]);
+
+	  return OF;
+	}();
+
+	module.exports = OF;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var getToken = exports.getToken = function getToken() {
+	  try {
+	    return localStorage.getItem('accessToken') || null;
+	  } catch (e) {
+	    return null;
+	  }
+	};
+
+	var setToken = exports.setToken = function setToken(token) {
+	  try {
+	    localStorage.setItem('accessToken', token);
+	  } catch (e) {
+	    return null;
+	  }
+	};
+
+	var clearToken = exports.clearToken = function clearToken() {
+	  try {
+	    localStorage.removeItem('accessToken');
+	  } catch (e) {
+	    // nada
+	  }
+	};
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _auth = __webpack_require__(2);
+	var _auth = __webpack_require__(1);
 
 	module.exports = users;
 	var modelPrefix = 'users';
 
-	function users(fetchJson, config) {
+	function users(fetchJSON, config) {
 	  return {
 
 	    /**
@@ -124,6 +183,7 @@ module.exports =
 	    login: function login(credentials) {
 	      return fetchJSON(modelPrefix + '/login', { method: 'POST', data: credentials }).then(function (token) {
 	        (0, _auth.setToken)(token.id);
+	        return token;
 	      });
 	    },
 
@@ -292,39 +352,6 @@ module.exports =
 	    }
 	  };
 	}
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var getToken = exports.getToken = function getToken() {
-	  try {
-	    return localStorage.getItem('accessToken') || null;
-	  } catch (e) {
-	    return null;
-	  }
-	};
-
-	var setToken = exports.setToken = function setToken(token) {
-	  try {
-	    localStorage.setItem('accessToken', token);
-	  } catch (e) {
-	    return null;
-	  }
-	};
-
-	var clearToken = exports.clearToken = function clearToken() {
-	  try {
-	    localStorage.removeItem('accessToken');
-	  } catch (e) {
-	    // nada
-	  }
-	};
 
 /***/ },
 /* 3 */
@@ -620,25 +647,17 @@ module.exports =
 
 	'use strict';
 
-	var _isomorphicFetch = __webpack_require__(8);
+	__webpack_require__(8);
 
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	var _auth = __webpack_require__(2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _auth = __webpack_require__(1);
 
 	module.exports = createFetchFunction;
 
-	// default API base
-	var DEFAULT_API_BASE = 'https://dev.openframe.io/api/';
-	// For local development
-	// const DEFAULT_API_BASE = 'http://localhost:8888/api/';
-	var API_BASE = DEFAULT_API_BASE;
+	var API_BASE = void 0;
 
 	function createFetchFunction(config) {
-	  if (config.API_BASE) {
-	    API_BASE = DEFAULT_API_BASE;
+	  if (config.api_base) {
+	    API_BASE = config.api_base;
 	  }
 	  return fetchJSON;
 	}
@@ -722,6 +741,7 @@ module.exports =
 
 	  return new Promise(function (resolve, reject) {
 	    url = prependApiBase(url);
+
 	    var conf = {
 	      method: method,
 	      headers: {
@@ -739,7 +759,7 @@ module.exports =
 	    doFetch(url, conf);
 
 	    function doFetch(url, conf) {
-	      (0, _isomorphicFetch2.default)(url, conf).then(checkStatus).then(parseJSON).then(function (data) {
+	      fetch(url, conf).then(checkStatus).then(parseJSON).then(function (data) {
 	        resolve(data);
 	      }).catch(function (error) {
 	        reject(error);
@@ -753,6 +773,59 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"name": "openframe-jsclient",
+		"version": "0.1.0",
+		"description": "A JavaScript API client for Openframe.",
+		"main": "of.js",
+		"scripts": {
+			"build": "webpack",
+			"test": "npm run lint && mocha --compilers js:babel-core/register",
+			"lint": "./node_modules/.bin/eslint test/*.js src/*.js"
+		},
+		"keywords": [
+			"openframe",
+			"api",
+			"client",
+			"javascript",
+			"js"
+		],
+		"author": "Jonathan Wohl <jon@jonwohl.com>",
+		"license": "MIT",
+		"devDependencies": {
+			"babel-core": "^6.0.0",
+			"babel-eslint": "^6.0.0",
+			"babel-loader": "^6.0.0",
+			"babel-plugin-transform-function-bind": "^6.8.0",
+			"babel-plugin-transform-object-rest-spread": "^6.8.0",
+			"babel-polyfill": "^6.3.14",
+			"babel-preset-es2015": "^6.0.15",
+			"babel-preset-react": "^6.0.15",
+			"bower-webpack-plugin": "^0.1.9",
+			"eslint": "^2.2.0",
+			"eslint-loader": "^1.0.0",
+			"eslint-plugin-react": "^4.0.0",
+			"fetch-mock": "^5.5.0",
+			"glob": "^7.0.0",
+			"json-loader": "^0.5.4",
+			"minimist": "^1.2.0",
+			"mocha": "^2.4.5",
+			"mock-local-storage": "^1.0.2",
+			"nock": "^9.0.2",
+			"null-loader": "^0.1.1",
+			"open": "0.0.5",
+			"rimraf": "^2.4.3",
+			"webpack": "^1.12.0"
+		},
+		"dependencies": {
+			"isomorphic-fetch": "^2.2.1"
+		}
+	};
 
 /***/ }
 /******/ ]);

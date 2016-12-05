@@ -2,10 +2,14 @@
   "name": "openframe-jsclient",
   "version": "0.1.0",
   "description": "A JavaScript API client for Openframe.",
-  "main": "index.js",
+  "main": "dist/of.js",
   "scripts": {
-    "test": "npm run lint && mocha --compilers js:babel-core/register",
-    "lint": "./node_modules/.bin/eslint test/*.js src/*.js"
+    "build": "webpack",
+    "lint": "./node_modules/.bin/eslint test/*.js src/*.js",
+    "patch-release": "npm version patch && npm publish && git push --follow-tags",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "test": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register",
+    "test-coveralls": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require babel-register && npm run coveralls"
   },
   "keywords": [
     "openframe",
@@ -14,7 +18,16 @@
     "javascript",
     "js"
   ],
-  "author": "Jonathan Wohl <jon@jonwohl.com>",
+  "author": {
+    "name": "Jonathan Wohl",
+    "url": "http://jonathanwohl.com"
+  },
+  "contributors": [
+    {
+      "name": "Jonathan Wohl",
+      "url": "http://jonathanwohl.com"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -26,11 +39,14 @@
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-react": "^6.0.15",
     "bower-webpack-plugin": "^0.1.9",
+    "coveralls": "^2.11.15",
     "eslint": "^2.2.0",
     "eslint-loader": "^1.0.0",
     "eslint-plugin-react": "^4.0.0",
     "fetch-mock": "^5.5.0",
     "glob": "^7.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
     "mocha": "^2.4.5",
     "mock-local-storage": "^1.0.2",
@@ -42,5 +58,9 @@
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenframeProject/Openframe-JSClient"
   }
 }
