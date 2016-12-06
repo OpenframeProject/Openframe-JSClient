@@ -119,6 +119,7 @@ function users(fetchJSON, config) {
      * Fetch a collection
      * @param  {String} collectionId Collection id (optional, defaults to primary collection)
      */
+    /* FOR FUTURE RELEASE
     fetchCollection: function(userId = 'current', collectionId = 'primary') {
       let filter = {
         'filter': {
@@ -129,6 +130,7 @@ function users(fetchJSON, config) {
       };
       return fetchJSON(`${modelPrefix}/${userId}/collections/${collectionId}`, { data: filter });
     },
+    */
 
     /**
      * Update a user
