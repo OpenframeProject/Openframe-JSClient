@@ -52,7 +52,7 @@ function frames(fetchJSON, config) {
     /**
      * Update list of managers by username
      * @param  {String} frameId
-     * @param  {String} managersData
+     * @param  {Array} managersData An array of usernames
      * @return {Promise}
      */
     updateFrameManagers: function (frameId, managersData) {

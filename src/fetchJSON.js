@@ -101,6 +101,7 @@ function fetchJSON(url, { method = 'GET', data = {}, access_token = null } = {})
     doFetch(url, conf);
 
     function doFetch(url, conf) {
+      // console.log('url', url);
       fetch(url, conf)
         .then(checkStatus)
         .then(parseJSON)

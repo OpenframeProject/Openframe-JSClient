@@ -83,24 +83,6 @@ function artwork(fetchJSON, config) {
     delete: function(artworkId) {
       return fetchJSON(`${modelPrefix}/${artworkId}`, { method: 'DELETE' });
     }
-
-    // /**
-    //  * Fetch the stream.
-    //  * @param  {Number} skip
-    //  * @param  {Number} limit
-    //  * @return {Promise}
-    //  */
-    // fetchStream: function(skip, limit) {
-    //   skip = skip || 0;
-    //   limit = limit || 25;
-    //   let filter = {
-    //     filter: {
-    //       skip: skip,
-    //       limit: limit
-    //     }
-    //   };
-    //   return fetchJSON(`${modelPrefix}/stream`, { data: filter });
-    // }
   };
 }
 

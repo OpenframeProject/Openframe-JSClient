@@ -1,17 +1,17 @@
-import fetchJSON from './fetchJSON';
+module.exports = config;
 
 // This may eventually be moved out of /users
 const modelPrefix = 'users/config';
 
-const config = {
-  /**
-   * Fetch the server config
-   * @return {Promise}
-   */
-  fetch: function() {
-    return fetchJSON(`${modelPrefix}`);
+function config(fetchJSON, config) {
+  return {
+    /**
+     * Fetch the server config
+     * @return {Promise}
+     */
+    fetch: function() {
+      return fetchJSON(`${modelPrefix}`);
+    }
+
   }
-
-};
-
-export default config;
+}

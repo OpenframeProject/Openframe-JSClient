@@ -18,6 +18,6 @@ export const clearToken = function() {
   try {
     localStorage.removeItem('accessToken');
   } catch(e) {
-    // nada
+    return null;
   }
 };

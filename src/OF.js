@@ -1,9 +1,9 @@
-import auth from './auth';
 import _users from './users';
 import _frames from './frames';
 import _artwork from './artwork';
 import _collections from './collections';
 import _channels from './channels';
+import _config from './config';
 import _fetchJSON from './fetchJSON';
 
 // Package version
@@ -26,10 +26,7 @@ class OF {
     this.artwork = _artwork(this.fetchJSON, this.options);
     this.collections = _collections(this.fetchJSON, this.options);
     this.channels = _channels(this.fetchJSON, this.options);
-  }
-
-  accessToken() {
-    return auth.getToken();
+    this.config = _config(this.fetchJSON, this.options);
   }
 }
 

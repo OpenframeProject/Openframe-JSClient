@@ -1,4 +1,4 @@
-import {setToken} from './auth';
+import {setToken, clearToken} from './auth';
 
 module.exports = users;
 const modelPrefix = 'users';
@@ -26,6 +26,17 @@ function users(fetchJSON, config) {
           setToken(token.id);
           return token;
         });
+    },
+
+    /**
+     * Logout
+     * @return {Promise}
+     */
+    logout: function() {
+      return new Promise((resolve) => {
+        clearToken();
+        resolve();
+      });
     },
 
     /**
