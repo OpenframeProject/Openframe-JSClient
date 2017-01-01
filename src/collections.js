@@ -8,7 +8,8 @@ function collections(fetchJSON, config) {
      * @param  {Boolean}
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {};
       let finalFilter = Object.assign({}, defaultFilter, filter);
       return fetchJSON(`${modelPrefix}`, { data: finalFilter });
@@ -20,7 +21,8 @@ function collections(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetchById: function(collectionId, filter = {}) {
+    fetchById: function(collectionId, filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: 'artwork'
       };

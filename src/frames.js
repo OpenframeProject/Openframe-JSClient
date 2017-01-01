@@ -9,7 +9,8 @@ function frames(fetchJSON, config) {
      * @param  {Object}
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: 'current_artwork'
       };
@@ -23,7 +24,8 @@ function frames(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetchById: function(frameId, filter = {}) {
+    fetchById: function(frameId, filter) {
+      filter = filter || {};
       let defaultFilter = {};
       let finalFilter = Object.assign({}, defaultFilter, filter);
       return fetchJSON(`${modelPrefix}/${frameId}`, { data: finalFilter });

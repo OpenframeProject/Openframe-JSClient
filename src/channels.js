@@ -8,7 +8,8 @@ function channels(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: ['owner']
       };
@@ -22,7 +23,8 @@ function channels(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetchById: function(channelId, filter = {}) {
+    fetchById: function(channelId, filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: ['owner']
       };
