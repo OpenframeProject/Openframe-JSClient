@@ -8,7 +8,8 @@ function channels(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: ['owner']
       };

@@ -8,7 +8,8 @@ function artwork(fetchJSON, config) {
      * @param  {Boolean}
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {
         limit: 100
       };
@@ -21,7 +22,8 @@ function artwork(fetchJSON, config) {
      * @param  {Boolean}
      * @return {Promise}
      */
-    fetchStream: function(filter = {}) {
+    fetchStream: function(filter) {
+      filter = filter || {};
       let defaultFilter = {
         where: {
           is_public: true
@@ -37,7 +39,8 @@ function artwork(fetchJSON, config) {
      * @param  {Boolean} includeCollections
      * @return {Promise}
      */
-    fetchById: function(artworkId, filter = {}) {
+    fetchById: function(artworkId, filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: ['owner']
       };

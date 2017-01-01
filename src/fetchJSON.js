@@ -80,7 +80,10 @@ function parseJSON(response) {
  * @param  {Object} options.data
  * @return {Promise}
  */
-function fetchJSON(url, { method = 'GET', data = {}, access_token = null } = {}) {
+function fetchJSON(url, opts) {
+  let defaultOpts = { method: 'GET', data: {}, access_token: null };
+  opts = Object.assign({}, defaultOpts, opts);
+  let { method, data, access_token} = opts;
   return new Promise((resolve, reject) => {
     url = prependApiBase(url);
 

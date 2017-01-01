@@ -44,7 +44,8 @@ function users(fetchJSON, config) {
      * @param  {Boolean}
      * @return {Promise}
      */
-    fetch: function(filter = {}) {
+    fetch: function(filter) {
+      filter = filter || {};
       let defaultFilter = {};
       let finalFilter = Object.assign({}, defaultFilter, filter);
       return fetchJSON(`${modelPrefix}`, { data: finalFilter });
@@ -55,7 +56,9 @@ function users(fetchJSON, config) {
      * @param  {String}  userId defaults to 'current'
      * @return {Promise}
      */
-    fetchById: function(userId = 'current', filter = {}, access_token = null) {
+    fetchById: function(userId, filter, access_token) {
+      userId = userId || 'current';
+      filter = filter || {};
       let defaultFilter = {};
       let finalFilter = Object.assign({}, defaultFilter, filter);
       return fetchJSON(`${modelPrefix}/${userId}`, { data: finalFilter, access_token });
@@ -66,7 +69,8 @@ function users(fetchJSON, config) {
      * @param  {String} username
      * @return {Promise}
      */
-    fetchByUsername: function(username, filter = {}) {
+    fetchByUsername: function(username, filter) {
+      filter = filter || {};
       let defaultFilter = {
         where: {
           username: username
@@ -95,7 +99,9 @@ function users(fetchJSON, config) {
      * @param  {String} userId
      * @return {Promise}
      */
-    fetchUserArtwork: function(userId = 'current', filter = {}) {
+    fetchUserArtwork: function(userId, filter) {
+      userId = userId || 'current';
+      filter = filter || {};
       let defaultFilter = {
         limit: 100
       };
@@ -109,7 +115,9 @@ function users(fetchJSON, config) {
      * @param  {String} userId
      * @return {Promise}
      */
-    fetchUserLikedArtwork: function(userId = 'current', filter = {}) {
+    fetchUserLikedArtwork: function(userId, filter) {
+      userId = userId || 'current';
+      filter = filter || {};
       let defaultFilter = {
         // limit: config.perPage
       };
@@ -122,7 +130,8 @@ function users(fetchJSON, config) {
      * @param  {String} userId
      * @return {Promise}
      */
-    fetchAllFrames: function(userId = 'current') {
+    fetchAllFrames: function(userId) {
+      userId = userId || 'current';
       return fetchJSON(`${modelPrefix}/${userId}/all_frames`);
     },
 
@@ -149,7 +158,8 @@ function users(fetchJSON, config) {
      * @param  {Object} userData
      * @return {Promise}
      */
-    update: function(userId = 'current', userData, access_token = null) {
+    update: function(userId, userData, access_token) {
+      userId = userId || 'current';
       return fetchJSON(`${modelPrefix}/${userId}`, { method: 'PUT', data: userData, access_token });
     },
 
@@ -162,15 +172,18 @@ function users(fetchJSON, config) {
       return fetchJSON(`${modelPrefix}/${userId}`, { method: 'DELETE' });
     },
 
-    likeArtwork: function(artworkId, userId = 'current') {
+    likeArtwork: function(artworkId, userId) {
+      userId = userId || 'current';
       return fetchJSON(`${modelPrefix}/${userId}/liked_artwork/rel/${artworkId}`, { method: 'PUT'});
     },
 
-    unlikeArtwork: function(artworkId, userId = 'current') {
+    unlikeArtwork: function(artworkId, userId) {
+      userId = userId || 'current';
       return fetchJSON(`${modelPrefix}/${userId}/liked_artwork/rel/${artworkId}`, { method: 'DELETE'});
     },
 
-    removeFromFrame: function(frameId, userId = 'current') {
+    removeFromFrame: function(frameId, userId) {
+      userId = userId || 'current';
       return fetchJSON(`${modelPrefix}/${userId}/managed_frames/rel/${frameId}`, { method: 'DELETE'});
     },
 
