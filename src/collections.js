@@ -21,7 +21,8 @@ function collections(fetchJSON, config) {
      * @param  {Object} filter
      * @return {Promise}
      */
-    fetchById: function(collectionId, filter = {}) {
+    fetchById: function(collectionId, filter) {
+      filter = filter || {};
       let defaultFilter = {
         include: 'artwork'
       };

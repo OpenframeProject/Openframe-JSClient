@@ -6,6 +6,7 @@ module.exports = createFetchFunction;
 let API_BASE;
 
 function createFetchFunction(config) {
+  /* istanbul ignore else  */
   if (config.api_base) {
     API_BASE = config.api_base;
   }
@@ -57,7 +58,7 @@ function checkStatus(response) {
     return response;
   }
   return response.json().then(json => {
-    const error = new Error(json.error && json.error.message || response.statusText)
+    const error = new Error(json.error && json.error.message || /* istanbul ignore next */ response.statusText)
     return Promise.reject(Object.assign(error, { response }))
   })
 }
@@ -69,7 +70,7 @@ function checkStatus(response) {
  */
 function parseJSON(response) {
   return response.text().then(function(text) {
-    return text ? JSON.parse(text) : {}
+    return text ? JSON.parse(text) : /* istanbul ignore next */ {}
   });
 }
 
