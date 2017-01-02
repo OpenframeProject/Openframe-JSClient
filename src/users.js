@@ -33,9 +33,8 @@ function users(fetchJSON, config) {
      * @return {Promise}
      */
     logout: function() {
-      return new Promise((resolve) => {
+      return fetchJSON(`${modelPrefix}/logout`, { method: 'POST' }).then(() => {
         clearToken();
-        resolve();
       });
     },
 

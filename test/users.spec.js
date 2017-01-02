@@ -56,9 +56,12 @@ describe('users', function() {
 
   describe('logout', function() {
     before(function() {
+      this.endpoint = 'https://api.openframe.io/api/users/logout';
+      this.successResponse = {};
       localStorage.setItem('accessToken', 'wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn');
     });
-    it('clears the accessToken', function(done) {
+    it('constucts the correct URL and clears the accessToken', function(done) {
+      fetchMock.post(this.endpoint, this.successResponse);
       this.OF.users.logout()
         .then(() => {
           assert.equal(localStorage.getItem('accessToken'), null);
