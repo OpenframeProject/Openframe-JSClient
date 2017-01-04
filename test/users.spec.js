@@ -4,7 +4,7 @@ var assert = require('assert');
 var fetchMock = require('fetch-mock');
 require('mock-local-storage');
 
-var OF = require('../src/OF.js');
+import OF from '../src/OF.js';
 
 describe('users', function() {
   before(function(){

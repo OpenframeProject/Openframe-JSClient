@@ -3,8 +3,7 @@
 var assert = require('assert');
 require('mock-local-storage');
 
-var OF = require('../src/OF.js');
-
+import OF from '../src/OF.js';
 
 describe('OF', function() {
 
