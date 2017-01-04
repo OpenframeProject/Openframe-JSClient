@@ -6,7 +6,7 @@ language_tabs:
 
 toc_footers:
   - <a href='https://github.com/OpenframeProject/Openframe-JSClient'>View on Github</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - <a href='https://github.com/tripit/slate' target="_blank">Documentation Powered by Slate</a>
 
 includes:
   - users
@@ -19,6 +19,8 @@ search: true
 ---
 
 # Introduction
+
+<aside class="warning">Jan. 4, 2017 - These docs are incomplete.</aside>
 
 Welcome to the Openframe JavaScript Client! You can use this lib to access Openframe REST API endpoints, which can be used to fetch and update artworks, frames, and profile information for authenticated users.
 
