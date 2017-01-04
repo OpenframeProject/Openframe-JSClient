@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Openframe API Reference</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic,900' rel='stylesheet' type='text/css'>
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;javascript&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/of-logo.svg" alt="Of logo" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="javascript">javascript</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the Openframe JavaScript Client! You can use this lib to access Openframe REST API endpoints, which can be used to fetch and update artworks, frames, and profile information for authenticated users.</p>
+
+<p>At present we only have this JavaScript client library, but you&rsquo;re welcome to use any language to interact with the API directly.</p>
+
+<p>All of the methods of the JS client return Promises which are resolved with the parsed response body or are rejected with an error message.</p>
+
+<h1 id="initializing-the-js-client">Initializing the JS Client</h1>
+<pre class="highlight javascript"><code><span class="kr">import</span> <span class="nx">OF</span> <span class="nx">from</span> <span class="s1">'openframe-jsclient'</span><span class="p">;</span>
+
+<span class="c1">// use default openframe server, openframe.io</span>
+<span class="kr">const</span> <span class="nx">OF</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OF</span><span class="p">();</span>
+
+<span class="c1">// to use a different server, pass option to constructor</span>
+<span class="kr">const</span> <span class="nx">OF</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OF</span><span class="p">({</span>
+  <span class="na">api_base</span><span class="p">:</span> <span class="s1">'http://localhost:8888/api'</span>
+<span class="p">});</span>
+</code></pre>
+<p>Import the Javascript client class and create a new instance, optionally passing configuration options.</p>
+
+<h3 id="configuration-options">Configuration Options</h3>
+
+<table><thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>api_base</td>
+<td>https://api.openframe.io/</td>
+<td>The base URL where the API is located</td>
+</tr>
+</tbody></table>
+
+<h1 id="authentication-authorization">Authentication / Authorization</h1>
+
+<p>Although some Openframe data is public and can be retrieved via unauthenticated access, the API requires an authenticated user&rsquo;s access token to be supplied with requests in order to manipulate a user&rsquo;s data. An access token can be obtained by hitting the <code class="prettyprint">login</code> endpoint and providing a valid username (or email) and password.</p>
+
+<p>Once obtained, the access token may be included in requests as a query param:</p>
+
+<p><code class="prettyprint">GET https://api.openframe.io/v0/user/12345/owned_frames?access_token=wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn</code></p>
+
+<p>or in an Authentication header:</p>
+
+<p><code class="prettyprint">Authentication: wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn</code></p>
+
+<p>As noted below, after successful login, the JS client manages storage and inclusion of the header (in browsers with localStorage available).</p>
+
+<h2 id="log-in">Log in</h2>
+
+<blockquote>
+<p>This assumes you&rsquo;ve got an instantiated OF client.</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span><span class="s1">'username'</span><span class="p">:</span> <span class="s1">'test'</span><span class="p">,</span> <span class="s1">'password'</span><span class="p">:</span> <span class="s1">'test'</span><span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">token</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="c1">// or</span>
+
+<span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">login</span><span class="p">({</span><span class="s1">'email'</span><span class="p">:</span> <span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'password'</span><span class="p">:</span> <span class="s1">'test'</span><span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">token</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">token</span><span class="p">);</span>
+  <span class="p">});</span>
+</code></pre>
+<blockquote>
+<p>If valid credentials are passed, the resolved token object, looks like this, where &ldquo;id&rdquo; is the actual access token value:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"ttl"</span><span class="p">:</span><span class="w"> </span><span class="mi">1209600</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-05T03:45:55.936Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56c47fba45e503657a51bebc"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>On success, the <code class="prettyprint">login</code> endpoint responds with an access token that is valid for two weeks or until explicity destroyed via logout. The token is presented as the <code class="prettyprint">id</code> value of response body, and must be supplied with subsequent requests on behalf of the logged in user.</p>
+
+<p>If localStorage is present (i.e. the browser), the JS client automatically saves the access token to localStorage and includes it in subsequent responses.</p>
+
+<h2 id="log-out">Log out</h2>
+
+<p>Calling <code class="prettyprint">logout</code> will destroy the access token on the server and, if present, clear it from localStorage. Successful logout will result in a 204 no content response and resolve the Promise. If there is any problem destroying the access token on the server, the promise will be rejected with an error.</p>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">logout</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// success, no response body</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+  <span class="p">});</span>
+</code></pre>
+          <h1 id="users">Users</h1>
+
+<h2 id="fetch-a-list-of-users">Fetch a list of Users</h2>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="nx">filter</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">users</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// do something with users</span>
+  <span class="p">});</span>
+
+</code></pre>
+<blockquote>
+<p>The above users array is structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sol Lewitt"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"slewitt"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.463Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56c47fba45e503657a51bebd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.463Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Peter Pan"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ppan"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.560Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56c47fba45e503657a51bebc"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.560Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Missy Elliot"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"melliot"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.666Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56c47fba45e503657a51bebe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.666Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves a list of users. At present, limited information is public for all Openframe users.</p>
+
+<h3 id="arguments">Arguments</h3>
+
+<table><thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>filter</td>
+<td>{}</td>
+<td>A filter config object</td>
+</tr>
+</tbody></table>
+
+<h2 id="fetch-a-user-by-id">Fetch a User by ID</h2>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">fetchById</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// user is currently authenticated user</span>
+  <span class="p">});</span>
+
+<span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">fetchById</span><span class="p">(</span><span class="s2">"56c47fba45e503657a51bebd"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// do something with user</span>
+  <span class="p">});</span>
+
+</code></pre>
+<blockquote>
+<p>The above user object is structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sol Lewitt"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"slewitt"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.463Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56c47fba45e503657a51bebd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-17T14:12:10.463Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This method retrieves a specific user by ID.</p>
+
+<p>If no ID is passed, it defaults to &lsquo;current&rsquo;, which returns the currently authenticated user.</p>
+
+<h2 id="fetch-a-user-by-username">Fetch a User by username</h2>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">fetchByUsername</span><span class="p">(</span><span class="s2">"slewitt"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="cm">/* user looks like
+    {
+      "full_name": "Sol Lewitt",
+      "username": "slewitt",
+      "created": "2016-02-17T14:12:10.463Z",
+      "id": "56c47fba45e503657a51bebd",
+      "modified": "2016-02-17T14:12:10.463Z"
+    }
+    */</span>
+  <span class="p">});</span>
+</code></pre>
+<p>This method retrieves a specific user by Username.</p>
+
+          <h1 id="frames">Frames</h1>
+
+<h2 id="fetch-all-current-user-39-s-frames">Fetch all current User&rsquo;s frames</h2>
+
+          <h1 id="artwork">Artwork</h1>
+
+<h2 id="fetch-a-list-of-artworks">Fetch a list of Artworks</h2>
+<pre class="highlight javascript"><code><span class="nx">OF</span><span class="p">.</span><span class="nx">artwork</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="nx">filter</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">artworks</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// do something with artworks</span>
+  <span class="p">});</span>
+
+</code></pre>
+<blockquote>
+<p>The above artworks array is structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown-1471551583623.frag"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://thebookofshaders.com/log/160818203933.frag"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"thumb_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://thebookofshaders.com/log/160818203933.png"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"required_extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openframe-glslviewer"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57b61d12c0006da8310e9143"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57b61cf8c0006da8310e9141"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-08-18T20:39:46.662Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-08-18T20:39:46.662Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nutrition Facts"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streetkonect.com/nutritionfacts"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"thumb_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streetkonect.com/nutritionfacts/nf4b.jpg"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"author_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Leah Valle"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"required_extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openframe-website"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a85d5bc0006da8310e906b"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a85cf2c0006da8310e9069"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-08-08T10:22:19.405Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-08-08T10:22:19.405Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves a list of Artworks. If called by an unauthenticated user, the list will include only public Artworks. If called by an authenticated user, private Artworks which the user has added will also be present in the response.</p>
+
+<h2 id="fetch-an-artwork-by-id">Fetch an Artwork by ID</h2>
+
+          <h1 id="filtering-queries">Filtering queries</h1>
+<pre class="highlight javascript"><code><span class="c1">// an example filter for an OF.users.fetch(filter)</span>
+<span class="kd">let</span> <span class="nx">filter</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">fields</span><span class="p">:</span> <span class="p">[</span><span class="s1">'username'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'website'</span><span class="p">],</span>    <span class="c1">// fields to include</span>
+  <span class="na">include</span><span class="p">:</span> <span class="s1">'created_artwork'</span><span class="p">,</span>               <span class="c1">// include a relation in the result</span>
+  <span class="na">limit</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>                                <span class="c1">// limit the number of results</span>
+  <span class="na">skip</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>                                 <span class="c1">// skip a number of results</span>
+  <span class="na">order</span><span class="p">:</span> <span class="s1">'username ASC'</span><span class="p">,</span>                    <span class="c1">// result order direction, ASC or DESC</span>
+  <span class="na">where</span><span class="p">:</span> <span class="p">{</span>                                  <span class="c1">// filter by field data</span>
+    <span class="na">username</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">like</span><span class="p">:</span> <span class="s1">'abc'</span>                           <span class="c1">// lots of operator options</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">}</span>
+</code></pre>
+<p>All of the <code class="prettyprint">fetch</code> methods can take an optional <code class="prettyprint">filter</code> config object, which allows filtering of the query results. Whenever available, it takes the form shown on the right.</p>
+
+          <h1 id="errors">Errors</h1>
+
+<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
+
+<p>The Kittn API uses the following error codes:</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Your request sucks</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your API key is wrong</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; The specified kitten could not be found</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+</tr>
+<tr>
+<td>406</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone &ndash; The kitten requested has been removed from our servers</td>
+</tr>
+<tr>
+<td>418</td>
+<td>I&rsquo;m a teapot</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="javascript">javascript</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
