@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - "4"
   - "5"
+  - "6"
 
 notifications:
   slack: openframe-community:zfOODf2VUOEM8uh93Tkdd0k6

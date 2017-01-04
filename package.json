@@ -6,11 +6,11 @@
   "scripts": {
     "build": "webpack",
     "lint": "./node_modules/.bin/eslint test/*.js src/*.js",
-    "postinstall": "cd docs && bundle install",
     "patch-release": "npm version patch && npm publish && git push --follow-tags",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "test": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register",
     "test-coveralls": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require babel-register && npm run coveralls",
+    "docs:setup": "cd docs && bundle install",
     "docs:build": "cd docs && bundle exec middleman build --clean",
     "docs:run": "cd docs && bundle exec middleman server",
     "docs:deploy": "git subtree push --prefix docs/build origin gh-pages"
