@@ -75,7 +75,7 @@ function artwork(fetchJSON, config) {
      * @return {Promise}
      */
     update: function(artworkId, artworkData) {
-      return fetchJSON(`${modelPrefix}/${artworkId}`, { method: 'PUT', data: artworkData });
+      return fetchJSON(`${modelPrefix}/${artworkId}`, { method: 'PATCH', data: artworkData });
     },
 
     /**

@@ -38,7 +38,7 @@ function frames(fetchJSON, config) {
      * @return {Promise}
      */
     update: function(frameId, frameData) {
-      return fetchJSON(`${modelPrefix}/${frameId}`, { method: 'PUT', data: frameData });
+      return fetchJSON(`${modelPrefix}/${frameId}`, { method: 'PATCH', data: frameData });
     },
 
     /**

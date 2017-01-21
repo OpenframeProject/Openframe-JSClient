@@ -159,7 +159,7 @@ function users(fetchJSON, config) {
      */
     update: function(userId, userData, access_token) {
       userId = userId || 'current';
-      return fetchJSON(`${modelPrefix}/${userId}`, { method: 'PUT', data: userData, access_token });
+      return fetchJSON(`${modelPrefix}/${userId}`, { method: 'PATCH', data: userData, access_token });
     },
 
     /**

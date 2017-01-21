@@ -78,7 +78,7 @@ describe('artwork', function() {
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
-      fetchMock.put(this.endpoint, this.successResponse);
+      fetchMock.patch(this.endpoint, this.successResponse);
       this.OF.artwork.update(123)
         .then(artwork => {
           done();

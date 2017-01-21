@@ -251,7 +251,7 @@ describe('users', function() {
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
-      fetchMock.put(this.endpoint, this.successResponse);
+      fetchMock.patch(this.endpoint, this.successResponse);
       this.OF.users.update(123)
         .then(user => {
           done();
@@ -259,7 +259,7 @@ describe('users', function() {
     });
     it('defaults to the current user', function(done) {
       this.endpoint = '^https://api.openframe.io/api/users/current';
-      fetchMock.put(this.endpoint, this.successResponse);
+      fetchMock.patch(this.endpoint, this.successResponse);
       this.OF.users.update()
         .then(user => {
           done();

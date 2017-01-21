@@ -67,7 +67,7 @@ describe('frames', function() {
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
-      fetchMock.put(this.endpoint, this.successResponse);
+      fetchMock.patch(this.endpoint, this.successResponse);
       this.OF.frames.update(123)
         .then(frame => {
           done();
