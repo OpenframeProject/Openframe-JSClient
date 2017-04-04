@@ -47,13 +47,7 @@ module.exports =
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _auth = __webpack_require__(1);
-
-	var _auth2 = _interopRequireDefault(_auth);
-
-	var _users2 = __webpack_require__(2);
+	var _users2 = __webpack_require__(1);
 
 	var _users3 = _interopRequireDefault(_users2);
 
@@ -73,7 +67,11 @@ module.exports =
 
 	var _channels3 = _interopRequireDefault(_channels2);
 
-	var _fetchJSON2 = __webpack_require__(7);
+	var _config2 = __webpack_require__(7);
+
+	var _config3 = _interopRequireDefault(_config2);
+
+	var _fetchJSON2 = __webpack_require__(8);
 
 	var _fetchJSON3 = _interopRequireDefault(_fetchJSON2);
 
@@ -82,83 +80,40 @@ module.exports =
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	// Package version
-	var VERSION = __webpack_require__(9).version;
+	var VERSION = __webpack_require__(10).version;
 
 	var DEFAULT_OPTIONS = {
-	  api_base: 'https://api.openframe.io/api/'
+	  api_base: 'https://api.openframe.io/v0/'
 	};
 
-	var OF = function () {
-	  function OF() {
-	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	var OF = function OF() {
+	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-	    _classCallCheck(this, OF);
+	  _classCallCheck(this, OF);
 
-	    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
+	  this.options = Object.assign({}, DEFAULT_OPTIONS, options);
 
-	    this.VERSION = VERSION;
+	  this.VERSION = VERSION;
 
-	    this.fetchJSON = (0, _fetchJSON3.default)(this.options);
+	  this.fetchJSON = (0, _fetchJSON3.default)(this.options);
 
-	    this.users = (0, _users3.default)(this.fetchJSON, this.options);
-	    this.frames = (0, _frames3.default)(this.fetchJSON, this.options);
-	    this.artwork = (0, _artwork3.default)(this.fetchJSON, this.options);
-	    this.collections = (0, _collections3.default)(this.fetchJSON, this.options);
-	    this.channels = (0, _channels3.default)(this.fetchJSON, this.options);
-	  }
-
-	  _createClass(OF, [{
-	    key: 'accessToken',
-	    value: function accessToken() {
-	      return _auth2.default.getToken();
-	    }
-	  }]);
-
-	  return OF;
-	}();
+	  this.users = (0, _users3.default)(this.fetchJSON, this.options);
+	  this.frames = (0, _frames3.default)(this.fetchJSON, this.options);
+	  this.artwork = (0, _artwork3.default)(this.fetchJSON, this.options);
+	  this.collections = (0, _collections3.default)(this.fetchJSON, this.options);
+	  this.channels = (0, _channels3.default)(this.fetchJSON, this.options);
+	  this.config = (0, _config3.default)(this.fetchJSON, this.options);
+	};
 
 	module.exports = OF;
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var getToken = exports.getToken = function getToken() {
-	  try {
-	    return localStorage.getItem('accessToken') || null;
-	  } catch (e) {
-	    return null;
-	  }
-	};
-
-	var setToken = exports.setToken = function setToken(token) {
-	  try {
-	    localStorage.setItem('accessToken', token);
-	  } catch (e) {
-	    return null;
-	  }
-	};
-
-	var clearToken = exports.clearToken = function clearToken() {
-	  try {
-	    localStorage.removeItem('accessToken');
-	  } catch (e) {
-	    // nada
-	  }
-	};
-
-/***/ },
-/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _auth = __webpack_require__(1);
+	var _auth = __webpack_require__(2);
 
 	module.exports = users;
 	var modelPrefix = 'users';
@@ -188,13 +143,22 @@ module.exports =
 	    },
 
 	    /**
+	     * Logout
+	     * @return {Promise}
+	     */
+	    logout: function logout() {
+	      return fetchJSON(modelPrefix + '/logout', { method: 'POST' }).then(function () {
+	        (0, _auth.clearToken)();
+	      });
+	    },
+
+	    /**
 	     * Fetch a list of users.
 	     * @param  {Boolean}
 	     * @return {Promise}
 	     */
-	    fetch: function fetch() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetch: function fetch(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON('' + modelPrefix, { data: finalFilter });
@@ -205,11 +169,9 @@ module.exports =
 	     * @param  {String}  userId defaults to 'current'
 	     * @return {Promise}
 	     */
-	    fetchById: function fetchById() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	      var access_token = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
+	    fetchById: function fetchById(userId, filter, access_token) {
+	      userId = userId || 'current';
+	      filter = filter || {};
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON(modelPrefix + '/' + userId, { data: finalFilter, access_token: access_token });
@@ -220,9 +182,8 @@ module.exports =
 	     * @param  {String} username
 	     * @return {Promise}
 	     */
-	    fetchByUsername: function fetchByUsername(username) {
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchByUsername: function fetchByUsername(username, filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        where: {
 	          username: username
@@ -251,10 +212,9 @@ module.exports =
 	     * @param  {String} userId
 	     * @return {Promise}
 	     */
-	    fetchUserArtwork: function fetchUserArtwork() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchUserArtwork: function fetchUserArtwork(userId, filter) {
+	      userId = userId || 'current';
+	      filter = filter || {};
 	      var defaultFilter = {
 	        limit: 100
 	      };
@@ -268,10 +228,9 @@ module.exports =
 	     * @param  {String} userId
 	     * @return {Promise}
 	     */
-	    fetchUserLikedArtwork: function fetchUserLikedArtwork() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchUserLikedArtwork: function fetchUserLikedArtwork(userId, filter) {
+	      userId = userId || 'current';
+	      filter = filter || {};
 	      var defaultFilter = {
 	        // limit: config.perPage
 	      };
@@ -284,9 +243,8 @@ module.exports =
 	     * @param  {String} userId
 	     * @return {Promise}
 	     */
-	    fetchAllFrames: function fetchAllFrames() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-
+	    fetchAllFrames: function fetchAllFrames(userId) {
+	      userId = userId || 'current';
 	      return fetchJSON(modelPrefix + '/' + userId + '/all_frames');
 	    },
 
@@ -294,17 +252,18 @@ module.exports =
 	     * Fetch a collection
 	     * @param  {String} collectionId Collection id (optional, defaults to primary collection)
 	     */
-	    fetchCollection: function fetchCollection() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-	      var collectionId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'primary';
-
-	      var filter = {
+	    /* FOR FUTURE RELEASE
+	    fetchCollection: function(userId = 'current', collectionId = 'primary') {
+	      let filter = {
 	        'filter': {
-	          'include': ['artwork']
+	          'include': [
+	            'artwork'
+	          ]
 	        }
 	      };
-	      return fetchJSON(modelPrefix + '/' + userId + '/collections/' + collectionId, { data: filter });
+	      return fetchJSON(`${modelPrefix}/${userId}/collections/${collectionId}`, { data: filter });
 	    },
+	    */
 
 	    /**
 	     * Update a user
@@ -312,12 +271,9 @@ module.exports =
 	     * @param  {Object} userData
 	     * @return {Promise}
 	     */
-	    update: function update() {
-	      var userId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
-	      var userData = arguments[1];
-	      var access_token = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-	      return fetchJSON(modelPrefix + '/' + userId, { method: 'PUT', data: userData, access_token: access_token });
+	    update: function update(userId, userData, access_token) {
+	      userId = userId || 'current';
+	      return fetchJSON(modelPrefix + '/' + userId, { method: 'PATCH', data: userData, access_token: access_token });
 	    },
 
 	    /**
@@ -329,21 +285,18 @@ module.exports =
 	      return fetchJSON(modelPrefix + '/' + userId, { method: 'DELETE' });
 	    },
 
-	    likeArtwork: function likeArtwork(artworkId) {
-	      var userId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'current';
-
+	    likeArtwork: function likeArtwork(artworkId, userId) {
+	      userId = userId || 'current';
 	      return fetchJSON(modelPrefix + '/' + userId + '/liked_artwork/rel/' + artworkId, { method: 'PUT' });
 	    },
 
-	    unlikeArtwork: function unlikeArtwork(artworkId) {
-	      var userId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'current';
-
+	    unlikeArtwork: function unlikeArtwork(artworkId, userId) {
+	      userId = userId || 'current';
 	      return fetchJSON(modelPrefix + '/' + userId + '/liked_artwork/rel/' + artworkId, { method: 'DELETE' });
 	    },
 
-	    removeFromFrame: function removeFromFrame(frameId) {
-	      var userId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'current';
-
+	    removeFromFrame: function removeFromFrame(frameId, userId) {
+	      userId = userId || 'current';
 	      return fetchJSON(modelPrefix + '/' + userId + '/managed_frames/rel/' + frameId, { method: 'DELETE' });
 	    },
 
@@ -352,6 +305,43 @@ module.exports =
 	    }
 	  };
 	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var inMemStorage = {};
+
+	var getToken = exports.getToken = function getToken() {
+	  try {
+	    return localStorage.getItem('accessToken') || null;
+	  } catch (e) {
+	    return inMemStorage.accessToken || null;
+	  }
+	};
+
+	var setToken = exports.setToken = function setToken(token) {
+	  try {
+	    localStorage.setItem('accessToken', token);
+	  } catch (e) {
+	    inMemStorage.accessToken = token;
+	    return token;
+	  }
+	};
+
+	var clearToken = exports.clearToken = function clearToken() {
+	  try {
+	    localStorage.removeItem('accessToken');
+	  } catch (e) {
+	    delete inMemStorage.token;
+	    return null;
+	  }
+	};
 
 /***/ },
 /* 3 */
@@ -369,9 +359,8 @@ module.exports =
 	     * @param  {Object}
 	     * @return {Promise}
 	     */
-	    fetch: function fetch() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetch: function fetch(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        include: 'current_artwork'
 	      };
@@ -385,9 +374,8 @@ module.exports =
 	     * @param  {Object} filter
 	     * @return {Promise}
 	     */
-	    fetchById: function fetchById(frameId) {
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchById: function fetchById(frameId, filter) {
+	      filter = filter || {};
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON(modelPrefix + '/' + frameId, { data: finalFilter });
@@ -400,7 +388,7 @@ module.exports =
 	     * @return {Promise}
 	     */
 	    update: function update(frameId, frameData) {
-	      return fetchJSON(modelPrefix + '/' + frameId, { method: 'PUT', data: frameData });
+	      return fetchJSON(modelPrefix + '/' + frameId, { method: 'PATCH', data: frameData });
 	    },
 
 	    /**
@@ -416,7 +404,7 @@ module.exports =
 	    /**
 	     * Update list of managers by username
 	     * @param  {String} frameId
-	     * @param  {String} managersData
+	     * @param  {Array} managersData An array of usernames
 	     * @return {Promise}
 	     */
 	    updateFrameManagers: function updateFrameManagers(frameId, managersData) {
@@ -451,9 +439,8 @@ module.exports =
 	     * @param  {Boolean}
 	     * @return {Promise}
 	     */
-	    fetch: function fetch() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetch: function fetch(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        limit: 100
 	      };
@@ -466,9 +453,8 @@ module.exports =
 	     * @param  {Boolean}
 	     * @return {Promise}
 	     */
-	    fetchStream: function fetchStream() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetchStream: function fetchStream(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        where: {
 	          is_public: true
@@ -484,9 +470,8 @@ module.exports =
 	     * @param  {Boolean} includeCollections
 	     * @return {Promise}
 	     */
-	    fetchById: function fetchById(artworkId) {
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchById: function fetchById(artworkId, filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        include: ['owner']
 	      };
@@ -521,7 +506,7 @@ module.exports =
 	     * @return {Promise}
 	     */
 	    update: function update(artworkId, artworkData) {
-	      return fetchJSON(modelPrefix + '/' + artworkId, { method: 'PUT', data: artworkData });
+	      return fetchJSON(modelPrefix + '/' + artworkId, { method: 'PATCH', data: artworkData });
 	    },
 
 	    /**
@@ -532,24 +517,6 @@ module.exports =
 	    delete: function _delete(artworkId) {
 	      return fetchJSON(modelPrefix + '/' + artworkId, { method: 'DELETE' });
 	    }
-
-	    // /**
-	    //  * Fetch the stream.
-	    //  * @param  {Number} skip
-	    //  * @param  {Number} limit
-	    //  * @return {Promise}
-	    //  */
-	    // fetchStream: function(skip, limit) {
-	    //   skip = skip || 0;
-	    //   limit = limit || 25;
-	    //   let filter = {
-	    //     filter: {
-	    //       skip: skip,
-	    //       limit: limit
-	    //     }
-	    //   };
-	    //   return fetchJSON(`${modelPrefix}/stream`, { data: filter });
-	    // }
 	  };
 	}
 
@@ -569,9 +536,8 @@ module.exports =
 	     * @param  {Boolean}
 	     * @return {Promise}
 	     */
-	    fetch: function fetch() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetch: function fetch(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON('' + modelPrefix, { data: finalFilter });
@@ -583,9 +549,8 @@ module.exports =
 	     * @param  {Object} filter
 	     * @return {Promise}
 	     */
-	    fetchById: function fetchById(collectionId) {
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchById: function fetchById(collectionId, filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        include: 'artwork'
 	      };
@@ -612,9 +577,8 @@ module.exports =
 	     * @param  {Object} filter
 	     * @return {Promise}
 	     */
-	    fetch: function fetch() {
-	      var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
+	    fetch: function fetch(filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        include: ['owner']
 	      };
@@ -628,9 +592,8 @@ module.exports =
 	     * @param  {Object} filter
 	     * @return {Promise}
 	     */
-	    fetchById: function fetchById(channelId) {
-	      var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+	    fetchById: function fetchById(channelId, filter) {
+	      filter = filter || {};
 	      var defaultFilter = {
 	        include: ['owner']
 	      };
@@ -643,19 +606,44 @@ module.exports =
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = config;
+
+	// This may eventually be moved out of /users
+	var modelPrefix = 'users/config';
+
+	function config(fetchJSON, config) {
+	  return {
+	    /**
+	     * Fetch the server config
+	     * @return {Promise}
+	     */
+	    fetch: function fetch() {
+	      return fetchJSON('' + modelPrefix);
+	    }
+
+	  };
+	}
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	__webpack_require__(8);
+	__webpack_require__(9);
 
-	var _auth = __webpack_require__(1);
+	var _auth = __webpack_require__(2);
 
 	module.exports = createFetchFunction;
 
 	var API_BASE = void 0;
 
 	function createFetchFunction(config) {
+	  /* istanbul ignore else  */
 	  if (config.api_base) {
 	    API_BASE = config.api_base;
 	  }
@@ -707,7 +695,7 @@ module.exports =
 	    return response;
 	  }
 	  return response.json().then(function (json) {
-	    var error = new Error(json.error && json.error.message || response.statusText);
+	    var error = new Error(json.error && json.error.message || /* istanbul ignore next */response.statusText);
 	    return Promise.reject(Object.assign(error, { response: response }));
 	  });
 	}
@@ -719,7 +707,7 @@ module.exports =
 	 */
 	function parseJSON(response) {
 	  return response.text().then(function (text) {
-	    return text ? JSON.parse(text) : {};
+	    return text ? JSON.parse(text) : /* istanbul ignore next */{};
 	  });
 	}
 
@@ -730,14 +718,13 @@ module.exports =
 	 * @param  {Object} options.data
 	 * @return {Promise}
 	 */
-	function fetchJSON(url) {
-	  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-	      _ref$method = _ref.method,
-	      method = _ref$method === undefined ? 'GET' : _ref$method,
-	      _ref$data = _ref.data,
-	      data = _ref$data === undefined ? {} : _ref$data,
-	      _ref$access_token = _ref.access_token,
-	      access_token = _ref$access_token === undefined ? null : _ref$access_token;
+	function fetchJSON(url, opts) {
+	  var defaultOpts = { method: 'GET', data: {}, access_token: null };
+	  opts = Object.assign({}, defaultOpts, opts);
+	  var _opts = opts,
+	      method = _opts.method,
+	      data = _opts.data,
+	      access_token = _opts.access_token;
 
 	  return new Promise(function (resolve, reject) {
 	    url = prependApiBase(url);
@@ -759,6 +746,7 @@ module.exports =
 	    doFetch(url, conf);
 
 	    function doFetch(url, conf) {
+	      // console.log('url', url);
 	      fetch(url, conf).then(checkStatus).then(parseJSON).then(function (data) {
 	        resolve(data);
 	      }).catch(function (error) {
@@ -769,24 +757,31 @@ module.exports =
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = {
 		"name": "openframe-jsclient",
 		"version": "0.1.0",
 		"description": "A JavaScript API client for Openframe.",
-		"main": "of.js",
+		"main": "dist/of.js",
 		"scripts": {
 			"build": "webpack",
-			"test": "npm run lint && mocha --compilers js:babel-core/register",
-			"lint": "./node_modules/.bin/eslint test/*.js src/*.js"
+			"lint": "./node_modules/.bin/eslint test/*.js src/*.js",
+			"patch-release": "npm version patch && npm publish && git push --follow-tags",
+			"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+			"test": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register",
+			"test-coveralls": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require babel-register && npm run coveralls",
+			"docs:setup": "cd docs && bundle install",
+			"docs:build": "cd docs && bundle exec middleman build --clean",
+			"docs:run": "cd docs && bundle exec middleman server",
+			"docs:deploy": "git subtree push --prefix docs/build origin gh-pages"
 		},
 		"keywords": [
 			"openframe",
@@ -795,7 +790,16 @@ module.exports =
 			"javascript",
 			"js"
 		],
-		"author": "Jonathan Wohl <jon@jonwohl.com>",
+		"author": {
+			"name": "Jonathan Wohl",
+			"url": "http://jonathanwohl.com"
+		},
+		"contributors": [
+			{
+				"name": "Jonathan Wohl",
+				"url": "http://jonathanwohl.com"
+			}
+		],
 		"license": "MIT",
 		"devDependencies": {
 			"babel-core": "^6.0.0",
@@ -806,12 +810,15 @@ module.exports =
 			"babel-polyfill": "^6.3.14",
 			"babel-preset-es2015": "^6.0.15",
 			"babel-preset-react": "^6.0.15",
+			"babel-register": "^6.18.0",
 			"bower-webpack-plugin": "^0.1.9",
+			"coveralls": "^2.11.15",
 			"eslint": "^2.2.0",
 			"eslint-loader": "^1.0.0",
 			"eslint-plugin-react": "^4.0.0",
 			"fetch-mock": "^5.5.0",
 			"glob": "^7.0.0",
+			"istanbul": "^1.1.0-alpha.1",
 			"json-loader": "^0.5.4",
 			"minimist": "^1.2.0",
 			"mocha": "^2.4.5",
@@ -823,7 +830,12 @@ module.exports =
 			"webpack": "^1.12.0"
 		},
 		"dependencies": {
-			"isomorphic-fetch": "^2.2.1"
+			"isomorphic-fetch": "^2.2.1",
+			"node-localstorage": "^1.3.0"
+		},
+		"repository": {
+			"type": "git",
+			"url": "https://github.com/OpenframeProject/Openframe-JSClient"
 		}
 	};
 

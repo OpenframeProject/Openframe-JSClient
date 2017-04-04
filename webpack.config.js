@@ -1,5 +1,5 @@
 module.exports = {
-  entry: "./src/api",
+  entry: "./src/OF",
   output: {
     path: __dirname,
     filename: "dist/of.js",

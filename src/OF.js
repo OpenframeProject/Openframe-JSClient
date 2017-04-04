@@ -10,7 +10,7 @@ import _fetchJSON from './fetchJSON';
 const VERSION = require('../package.json').version;
 
 const DEFAULT_OPTIONS = {
-  api_base: 'https://api.openframe.io/api/'
+  api_base: 'https://api.openframe.io/v0/'
 };
 
 class OF {
