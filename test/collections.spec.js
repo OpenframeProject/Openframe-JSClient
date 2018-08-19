@@ -18,7 +18,7 @@ describe('collections', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/collections';
+      this.endpoint = 'begin:https://api.openframe.io/v0/collections';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -32,7 +32,7 @@ describe('collections', function() {
 
   describe('fetchById', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/collections/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/collections/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {

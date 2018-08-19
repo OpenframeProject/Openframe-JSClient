@@ -16,7 +16,7 @@ describe('artwork', function() {
 
   describe('create', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/api/users/current/created_artwork';
+      this.endpoint = 'https://api.openframe.io/v0/users/current/created_artwork';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -30,7 +30,7 @@ describe('artwork', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/artwork';
+      this.endpoint = 'begin:https://api.openframe.io/v0/artwork';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -45,7 +45,7 @@ describe('artwork', function() {
   describe('fetchStream', function() {
     before(function() {
       let filter = JSON.stringify({ limit: 100, where: { is_public: true } });
-      this.endpoint = `^https://api.openframe.io/api/artwork?filter=${filter}`;
+      this.endpoint = `begin:https://api.openframe.io/v0/artwork?filter=${filter}`;
       console.log('endpoint', this.endpoint);
       this.successResponse = [];
     });
@@ -60,7 +60,7 @@ describe('artwork', function() {
 
   describe('fetchById', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/artwork/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/artwork/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -74,7 +74,7 @@ describe('artwork', function() {
 
   describe('update', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/artwork/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/artwork/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -88,7 +88,7 @@ describe('artwork', function() {
 
   describe('delete', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/artwork/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/artwork/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {

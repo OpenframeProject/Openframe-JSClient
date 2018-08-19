@@ -18,7 +18,7 @@ describe('config', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/config';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/config';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {

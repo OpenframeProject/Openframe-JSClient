@@ -11,7 +11,7 @@ describe('OF', function() {
     var defaults = {};
     before(function() {
       defaults = {
-        api_base: 'https://api.openframe.io/api/'
+        api_base: 'https://api.openframe.io/v0/'
       };
     });
 

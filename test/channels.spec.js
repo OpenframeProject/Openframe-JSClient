@@ -18,7 +18,7 @@ describe('channels', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/channels';
+      this.endpoint = 'begin:https://api.openframe.io/v0/channels';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -32,7 +32,7 @@ describe('channels', function() {
 
   describe('fetchById', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/channels/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/channels/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {

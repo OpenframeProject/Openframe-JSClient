@@ -16,7 +16,7 @@ describe('users', function() {
 
   describe('login', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/api/users/login';
+      this.endpoint = 'https://api.openframe.io/v0/users/login';
       this.successResponse = {
         'id': 'wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn',
         'ttl': 1209600,
@@ -56,7 +56,7 @@ describe('users', function() {
 
   describe('logout', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/api/users/logout';
+      this.endpoint = 'https://api.openframe.io/v0/users/logout';
       this.successResponse = {};
       localStorage.setItem('accessToken', 'wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn');
     });
@@ -72,7 +72,7 @@ describe('users', function() {
 
   describe('create', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/api/users';
+      this.endpoint = 'https://api.openframe.io/v0/users';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -86,7 +86,7 @@ describe('users', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -100,7 +100,7 @@ describe('users', function() {
 
   describe('fetchById', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -111,7 +111,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current';
       fetchMock.get(this.endpoint, this.successResponse);
       this.OF.users.fetchById()
         .then(user => {
@@ -123,7 +123,7 @@ describe('users', function() {
   describe('fetchByUsername', function() {
     before(function() {
       let filter = JSON.stringify({ where: { username: 'test' }, limit: 1 });
-      this.endpoint = `^https://api.openframe.io/api/users?filter=${filter}`;
+      this.endpoint = `begin:https://api.openframe.io/v0/users?filter=${filter}`;
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -145,7 +145,7 @@ describe('users', function() {
           },
           limit: 10
         });
-      this.endpoint = `^https://api.openframe.io/api/users?filter=${filter}`;
+      this.endpoint = `begin:https://api.openframe.io/v0/users?filter=${filter}`;
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -159,7 +159,7 @@ describe('users', function() {
 
   describe('fetchUserArtwork', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/created_artwork';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/created_artwork';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -170,7 +170,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/created_artwork';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/created_artwork';
       fetchMock.get(this.endpoint, this.successResponse);
       this.OF.users.fetchUserArtwork()
         .then(user => {
@@ -181,7 +181,7 @@ describe('users', function() {
 
   describe('fetchUserLikedArtwork', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/liked_artwork';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/liked_artwork';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -192,7 +192,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/liked_artwork';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/liked_artwork';
       fetchMock.get(this.endpoint, this.successResponse);
       this.OF.users.fetchUserLikedArtwork()
         .then(user => {
@@ -203,7 +203,7 @@ describe('users', function() {
 
   describe('fetchAllFrames', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/all_frames';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/all_frames';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -214,7 +214,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/all_frames';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/all_frames';
       fetchMock.get(this.endpoint, this.successResponse);
       this.OF.users.fetchAllFrames()
         .then(user => {
@@ -225,7 +225,7 @@ describe('users', function() {
 
   describe('fetchAllFrames', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/all_frames';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/all_frames';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -236,7 +236,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/all_frames';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/all_frames';
       fetchMock.get(this.endpoint, this.successResponse);
       this.OF.users.fetchAllFrames()
         .then(user => {
@@ -247,7 +247,7 @@ describe('users', function() {
 
   describe('update', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -258,7 +258,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current';
       fetchMock.patch(this.endpoint, this.successResponse);
       this.OF.users.update()
         .then(user => {
@@ -269,7 +269,7 @@ describe('users', function() {
 
   describe('delete', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -283,7 +283,7 @@ describe('users', function() {
 
   describe('likeArtwork', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/liked_artwork/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/liked_artwork/rel/456';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -294,7 +294,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/liked_artwork/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/liked_artwork/rel/456';
       fetchMock.put(this.endpoint, this.successResponse);
       this.OF.users.likeArtwork(456)
         .then(user => {
@@ -305,7 +305,7 @@ describe('users', function() {
 
   describe('unlikeArtwork', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/liked_artwork/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/liked_artwork/rel/456';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -316,7 +316,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/liked_artwork/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/liked_artwork/rel/456';
       fetchMock.delete(this.endpoint, this.successResponse);
       this.OF.users.unlikeArtwork(456)
         .then(user => {
@@ -327,7 +327,7 @@ describe('users', function() {
 
   describe('removeFromFrame', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/123/managed_frames/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/123/managed_frames/rel/456';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -338,7 +338,7 @@ describe('users', function() {
         });
     });
     it('defaults to the current user', function(done) {
-      this.endpoint = '^https://api.openframe.io/api/users/current/managed_frames/rel/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/current/managed_frames/rel/456';
       fetchMock.delete(this.endpoint, this.successResponse);
       this.OF.users.removeFromFrame(456)
         .then(user => {
@@ -349,7 +349,7 @@ describe('users', function() {
 
   describe('passwordReset', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/users/reset';
+      this.endpoint = 'begin:https://api.openframe.io/v0/users/reset';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {

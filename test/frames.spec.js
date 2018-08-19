@@ -20,7 +20,7 @@ describe('frames', function() {
   /*
   describe('create', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/api/frames';
+      this.endpoint = 'https://api.openframe.io/v0/frames';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -35,7 +35,7 @@ describe('frames', function() {
 
   describe('fetch', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames';
       this.successResponse = [];
     });
     it('constructs the correct endpoint', function(done) {
@@ -49,7 +49,7 @@ describe('frames', function() {
 
   describe('fetchById', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -63,7 +63,7 @@ describe('frames', function() {
 
   describe('update', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -77,7 +77,7 @@ describe('frames', function() {
 
   describe('updateCurrentArtwork', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames/123/current_artwork/456';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames/123/current_artwork/456';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -91,7 +91,7 @@ describe('frames', function() {
 
   describe('updateFrameManagers', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames/123/managers/by_username';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames/123/managers/by_username';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
@@ -105,7 +105,7 @@ describe('frames', function() {
 
   describe('delete', function() {
     before(function() {
-      this.endpoint = '^https://api.openframe.io/api/frames/123';
+      this.endpoint = 'begin:https://api.openframe.io/v0/frames/123';
       this.successResponse = {};
     });
     it('constructs the correct endpoint', function(done) {
