@@ -1,4 +1,4 @@
-import {setToken, clearToken} from './auth';
+import {getToken, setToken, clearToken} from './auth';
 
 module.exports = users;
 const modelPrefix = 'users';
@@ -33,7 +33,8 @@ function users(fetchJSON, config) {
      * @return {Promise}
      */
     logout: function() {
-      return fetchJSON(`${modelPrefix}/logout`, { method: 'POST' }).then(() => {
+      const token = getToken()
+      return fetchJSON(`${modelPrefix}/logout?access_token=${token}`, { method: 'POST' }).then(() => {
         clearToken();
       });
     },
