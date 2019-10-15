@@ -56,7 +56,7 @@ describe('users', function() {
 
   describe('logout', function() {
     before(function() {
-      this.endpoint = 'https://api.openframe.io/v0/users/logout';
+      this.endpoint = 'https://api.openframe.io/v0/users/logout?access_token=wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn';
       this.successResponse = {};
       localStorage.setItem('accessToken', 'wtu2jsJYZTO8ZqjGokR1ejznxCw4Qd0hACFo50GXyx3eGcVNNroccDWHZHmHVXKn');
     });
