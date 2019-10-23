@@ -4,7 +4,7 @@ const modelPrefix = 'collections';
 function collections(fetchJSON, config) {
   return {
     /**
-     * Fetch a list of frames.
+     * Fetch a list of collections.
      * @param  {Boolean}
      * @return {Promise}
      */
