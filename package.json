@@ -57,7 +57,7 @@
     "mock-local-storage": "^1.0.2",
     "nock": "^9.0.2",
     "null-loader": "^0.1.1",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "rimraf": "^2.4.3",
     "webpack": "^1.12.0"
   },
