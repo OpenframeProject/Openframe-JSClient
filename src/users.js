@@ -52,6 +52,18 @@ function users(fetchJSON, config) {
     },
 
     /**
+     * Fetch a list of users.
+     * @param  {Boolean}
+     * @return {Promise}
+     */
+    fetchCurrent: function(filter) {
+      filter = filter || {};
+      let defaultFilter = {};
+      let finalFilter = Object.assign({}, defaultFilter, filter);
+      return this.fetchById('current', finalFilter)
+    },
+
+    /**
      * Fetch a single user by ID
      * @param  {String}  userId defaults to 'current'
      * @return {Promise}
@@ -189,7 +201,16 @@ function users(fetchJSON, config) {
 
     passwordReset: function(email) {
       return fetchJSON(`${modelPrefix}/reset`, { method: 'POST', data: { email }});
+    },
+
+    /**
+     * Create a new frame for user. Use 'current' for `userId` to create for currently logged-in user.
+     * @param  {String} userId
+     * @param  {Object} frameData
+     * @return {Promise}
+     */
+    createNewFrame: function(userId, frameData) {
+      return fetchJSON(`${modelPrefix}/${userId}/owned_frames`, { method: 'POST', data: frameData });
     }
   };
-
 }

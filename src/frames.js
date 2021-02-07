@@ -32,6 +32,15 @@ function frames(fetchJSON, config) {
     },
 
     /**
+     * Create a frame
+     * @param  {Object} frameData
+     * @return {Promise}
+     */
+    create: function(frameData) {
+      return fetchJSON(`${modelPrefix}/${frameId}`, { method: 'POST', data: frameData });
+    },
+
+    /**
      * Update a frame
      * @param  {String} frameId
      * @param  {Object} frameData

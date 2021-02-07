@@ -43,7 +43,7 @@ module.exports =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -107,9 +107,9 @@ module.exports =
 
 	module.exports = OF;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -147,7 +147,8 @@ module.exports =
 	     * @return {Promise}
 	     */
 	    logout: function logout() {
-	      return fetchJSON(modelPrefix + '/logout', { method: 'POST' }).then(function () {
+	      var token = (0, _auth.getToken)();
+	      return fetchJSON(modelPrefix + '/logout?access_token=' + token, { method: 'POST' }).then(function () {
 	        (0, _auth.clearToken)();
 	      });
 	    },
@@ -162,6 +163,18 @@ module.exports =
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON('' + modelPrefix, { data: finalFilter });
+	    },
+
+	    /**
+	     * Fetch a list of users.
+	     * @param  {Boolean}
+	     * @return {Promise}
+	     */
+	    fetchCurrent: function fetchCurrent(filter) {
+	      filter = filter || {};
+	      var defaultFilter = {};
+	      var finalFilter = Object.assign({}, defaultFilter, filter);
+	      return this.fetchById('current', finalFilter);
 	    },
 
 	    /**
@@ -302,13 +315,23 @@ module.exports =
 
 	    passwordReset: function passwordReset(email) {
 	      return fetchJSON(modelPrefix + '/reset', { method: 'POST', data: { email: email } });
+	    },
+
+	    /**
+	     * Create a new frame for user. Use 'current' for `userId` to create for currently logged-in user.
+	     * @param  {String} userId
+	     * @param  {Object} frameData
+	     * @return {Promise}
+	     */
+	    createNewFrame: function createNewFrame(userId, frameData) {
+	      return fetchJSON(modelPrefix + '/' + userId + '/owned_frames', { method: 'POST', data: frameData });
 	    }
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -343,9 +366,9 @@ module.exports =
 	  }
 	};
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -379,6 +402,15 @@ module.exports =
 	      var defaultFilter = {};
 	      var finalFilter = Object.assign({}, defaultFilter, filter);
 	      return fetchJSON(modelPrefix + '/' + frameId, { data: finalFilter });
+	    },
+
+	    /**
+	     * Create a frame
+	     * @param  {Object} frameData
+	     * @return {Promise}
+	     */
+	    create: function create(frameData) {
+	      return fetchJSON(modelPrefix + '/' + frameId, { method: 'POST', data: frameData });
 	    },
 
 	    /**
@@ -423,9 +455,9 @@ module.exports =
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -520,9 +552,9 @@ module.exports =
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -532,7 +564,7 @@ module.exports =
 	function collections(fetchJSON, config) {
 	  return {
 	    /**
-	     * Fetch a list of frames.
+	     * Fetch a list of collections.
 	     * @param  {Boolean}
 	     * @return {Promise}
 	     */
@@ -561,9 +593,9 @@ module.exports =
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -604,9 +636,9 @@ module.exports =
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -628,9 +660,9 @@ module.exports =
 	  };
 	}
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -756,88 +788,17 @@ module.exports =
 	  });
 	}
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
-	module.exports = {
-		"name": "openframe-jsclient",
-		"version": "0.1.0",
-		"description": "A JavaScript API client for Openframe.",
-		"main": "dist/of.js",
-		"scripts": {
-			"build": "webpack",
-			"lint": "./node_modules/.bin/eslint test/*.js src/*.js",
-			"patch-release": "npm version patch && npm publish && git push --follow-tags",
-			"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-			"test": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register",
-			"test-coveralls": "npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require babel-register && npm run coveralls",
-			"docs:setup": "cd docs && bundle install",
-			"docs:build": "cd docs && bundle exec middleman build --clean",
-			"docs:run": "cd docs && bundle exec middleman server",
-			"docs:deploy": "git subtree push --prefix docs/build origin gh-pages"
-		},
-		"keywords": [
-			"openframe",
-			"api",
-			"client",
-			"javascript",
-			"js"
-		],
-		"author": {
-			"name": "Jonathan Wohl",
-			"url": "http://jonathanwohl.com"
-		},
-		"contributors": [
-			{
-				"name": "Jonathan Wohl",
-				"url": "http://jonathanwohl.com"
-			}
-		],
-		"license": "MIT",
-		"devDependencies": {
-			"babel-core": "^6.0.0",
-			"babel-eslint": "^6.0.0",
-			"babel-loader": "^6.0.0",
-			"babel-plugin-transform-function-bind": "^6.8.0",
-			"babel-plugin-transform-object-rest-spread": "^6.8.0",
-			"babel-polyfill": "^6.3.14",
-			"babel-preset-es2015": "^6.0.15",
-			"babel-preset-react": "^6.0.15",
-			"babel-register": "^6.18.0",
-			"bower-webpack-plugin": "^0.1.9",
-			"coveralls": "^2.11.15",
-			"eslint": "^2.2.0",
-			"eslint-loader": "^1.0.0",
-			"eslint-plugin-react": "^4.0.0",
-			"fetch-mock": "^5.5.0",
-			"glob": "^7.0.0",
-			"istanbul": "^1.1.0-alpha.1",
-			"json-loader": "^0.5.4",
-			"minimist": "^1.2.0",
-			"mocha": "^2.4.5",
-			"mock-local-storage": "^1.0.2",
-			"nock": "^9.0.2",
-			"null-loader": "^0.1.1",
-			"open": "0.0.5",
-			"rimraf": "^2.4.3",
-			"webpack": "^1.12.0"
-		},
-		"dependencies": {
-			"isomorphic-fetch": "^2.2.1",
-			"node-localstorage": "^1.3.0"
-		},
-		"repository": {
-			"type": "git",
-			"url": "https://github.com/OpenframeProject/Openframe-JSClient"
-		}
-	};
+	module.exports = {"name":"openframe-jsclient","version":"0.1.2","description":"A JavaScript API client for Openframe.","main":"dist/of.js","scripts":{"build":"webpack","lint":"./node_modules/.bin/eslint test/*.js src/*.js","patch-release":"npm version patch && npm publish && git push --follow-tags","coveralls":"cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage","test":"npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require babel-register","test-coveralls":"npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require babel-register && npm run coveralls","docs:setup":"cd docs && bundle install","docs:build":"cd docs && bundle exec middleman build --clean","docs:run":"cd docs && bundle exec middleman server","docs:deploy":"git subtree push --prefix docs/build origin gh-pages"},"keywords":["openframe","api","client","javascript","js"],"author":{"name":"Jonathan Wohl","url":"http://jonathanwohl.com"},"contributors":[{"name":"Jonathan Wohl","url":"http://jonathanwohl.com"}],"license":"MIT","devDependencies":{"babel-core":"^6.0.0","babel-eslint":"^6.0.0","babel-loader":"^6.0.0","babel-plugin-transform-function-bind":"^6.8.0","babel-plugin-transform-object-rest-spread":"^6.8.0","babel-polyfill":"^6.3.14","babel-preset-es2015":"^6.0.15","babel-preset-react":"^6.0.15","babel-register":"^6.18.0","bower-webpack-plugin":"^0.1.9","coveralls":"^2.11.15","eslint":"^4.19.1","eslint-loader":"^1.0.0","eslint-plugin-react":"^4.0.0","fetch-mock":"^5.5.0","glob":"^7.1.6","istanbul":"^1.1.0-alpha.1","json-loader":"^0.5.4","minimist":"^1.2.5","mocha":"^2.4.5","mock-local-storage":"^1.1.17","nock":"^9.0.2","null-loader":"^0.1.1","open":"6.0.0","rimraf":"^2.7.1","webpack":"^1.12.0"},"dependencies":{"isomorphic-fetch":"^2.2.1"},"repository":{"type":"git","url":"https://github.com/OpenframeProject/Openframe-JSClient"}}
 
-/***/ }
+/***/ })
 /******/ ]);
